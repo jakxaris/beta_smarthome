@@ -1,28 +1,1091 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Η Πρώτη μου Σελίδα</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-        h1 {
-            color: #333;
-            border: 2px solid #333;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: white;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Διπλωματική Εργασία – Smart Home</title>
+
+  <!-- Γραμματοσειρές Google (Inter, EB Garamond, Instrument Serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com" rel="stylesheet"
+    rel="stylesheet">
+
+  <style>
+    /* --------- Design tokens (βασικές μεταβλητές) --------- */
+    :root {
+      --color-bg: #f7f6f2;
+      --color-surface: #ffffff;
+      --color-surface-alt: #f0ede7;
+      --color-text: #22211c;
+      --color-text-muted: #696862;
+      --color-primary: #01696f;
+      --color-primary-soft: #e0ecec;
+      --color-border: rgba(0,0,0,0.08);
+
+      --radius-sm: 0.35rem;
+      --radius-md: 0.75rem;
+      --radius-xl: 1.25rem;
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-16: 4rem;
+
+      --text-sm: 0.9rem;
+      --text-base: 1rem;
+      --text-lg: 1.1rem;
+      --text-xl: 1.4rem;
+      --text-2xl: 2rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #171614;
+        --color-surface: #1f1e1c;
+        --color-surface-alt: #252421;
+        --color-text: #e4e3df;
+        --color-text-muted: #9b9a94;
+        --color-primary: #4f98a3;
+        --color-primary-soft: #263336;
+        --color-border: rgba(255,255,255,0.10);
+      }
+    }
+
+    [data-theme="light"] {
+      --color-bg: #f7f6f2;
+      --color-surface: #ffffff;
+      --color-surface-alt: #f0ede7;
+      --color-text: #22211c;
+      --color-text-muted: #696862;
+      --color-primary: #01696f;
+      --color-primary-soft: #e0ecec;
+      --color-border: rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #171614;
+      --color-surface: #1f1e1c;
+      --color-surface-alt: #252421;
+      --color-text: #e4e3df;
+      --color-text-muted: #9b9a94;
+      --color-primary: #4f98a3;
+      --color-primary-soft: #263336;
+      --color-border: rgba(255,255,255,0.10);
+    }
+
+    * , *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      text-size-adjust: none;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin-inline: auto;
+      padding-inline: var(--space-4);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--color-bg) 80%, rgba(255,255,255,0.4));
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: var(--space-3);
+      gap: var(--space-4);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: var(--text-sm);
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, #00a1a9 60%, #3ad6c2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    }
+
+    .logo-mark svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+    }
+
+    nav a {
+      padding: 0.4rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      background: var(--color-primary-soft);
+      border-color: var(--color-border);
+    }
+
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      padding: 0.3rem 0.55rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: var(--color-surface-alt);
+    }
+
+    .theme-toggle svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    main {
+      padding-block: var(--space-8);
+    }
+
+    section {
+      padding-block: var(--space-8);
+      scroll-margin-top: 80px;
+    }
+
+    .section-heading {
+      margin-bottom: var(--space-4);
+    }
+
+    .section-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-1);
+    }
+
+    .section-title {
+      font-family: "EB Garamond", "Georgia", serif;
+      font-size: var(--text-2xl);
+      line-height: 1.15;
+      margin-bottom: var(--space-2);
+    }
+
+    .section-intro {
+      max-width: 60ch;
+      color: var(--color-text-muted);
+      font-size: var(--text-base);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding-block: clamp(3rem, 6vw, 4.5rem);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.85) 0, rgba(255,255,255,0) 50%),
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,0.7) 0, rgba(255,255,255,0) 55%),
+        linear-gradient(135deg, #ecf8f3 0%, #d6efe4 45%, #184233 100%);
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.3fr);
+      gap: var(--space-8);
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-2);
+    }
+
+    .hero-title {
+      font-family: "Instrument Serif", "Georgia", serif;
+      font-size: clamp(2.2rem, 3vw, 2.8rem);
+      line-height: 1.08;
+      margin-bottom: var(--space-3);
+    }
+
+    .hero-subtitle {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+      max-width: 48ch;
+      margin-bottom: var(--space-4);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      padding: 0.25rem 0.7rem;
+      background: var(--color-surface-alt);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      padding: 0.55rem 1.25rem;
+      border-radius: 999px;
+      border: none;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-primary span {
+      font-size: 1.1rem;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-text);
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      font-size: var(--text-sm);
+      cursor: pointer;
+    }
+
+    .hero-card {
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at top left, var(--color-primary-soft), var(--color-surface) 45%);
+      padding: var(--space-6);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.16);
+    }
+
+    .hero-card-title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .hero-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--color-text-muted);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #12b981;
+    }
+
+    /* Δύο-στήλες για κείμενο + λίστες */
+    .two-column {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 2fr);
+      gap: var(--space-6);
+      align-items: flex-start;
+    }
+
+    .card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: var(--space-4);
+    }
+
+    h3 {
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-2);
+      font-weight: 600;
+    }
+
+    p {
+      font-size: var(--text-base);
+      margin-bottom: var(--space-2);
+    }
+
+    ul {
+      list-style: none;
+      margin-top: var(--space-1);
+      font-size: var(--text-base);
+    }
+
+    ul li {
+      padding-left: 1.4rem;
+      position: relative;
+      margin-bottom: 0.35rem;
+    }
+
+    ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0.15rem;
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: var(--space-2);
+    }
+
+    .tag {
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      padding: 0.15rem 0.6rem;
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+      background: var(--color-surface-alt);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: var(--space-4);
+    }
+
+    .kpi {
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+    }
+
+    .kpi-label {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .kpi-value {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    .muted {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .note-box {
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--color-border);
+      padding: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      background: var(--color-surface-alt);
+      margin-top: var(--space-3);
+    }
+
+    .contact-section {
+      text-align: left;
+    }
+
+    .contact-section dt {
+      font-weight: 600;
+      margin-top: var(--space-2);
+    }
+
+    .contact-section dd {
+      margin-left: 0;
+      font-size: var(--text-base);
+    }
+
+    footer {
+      border-top: 1px solid var(--color-border);
+      padding-block: var(--space-4);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* Responsiveness */
+    @media (max-width: 900px) {
+      .hero-grid,
+      .two-column,
+      .grid-3 {
+        grid-template-columns: minmax(0,1fr);
+      }
+      nav {
+        display: none;
+      }
+      .hero {
+        padding-top: var(--space-6);
+      }
+      section {
+        padding-block: var(--space-6);
+      }
+    }
+
+    /* Περίληψη διπλωματικής: κείμενο αριστερά + εικόνα δεξιά */
+    .summary-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: var(--space-8);
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 2.25rem);
+      margin-bottom: var(--space-8);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.9) 0, rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,0.8) 0, rgba(255,255,255,0) 55%),
+        linear-gradient(135deg, #ecf8f3 0%, #e3f2ff 45%, #d6efe4 100%);
+    }
+
+    /* Αρχιτεκτονική: κείμενο αριστερά + εικόνα δεξιά */
+    .architecture-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: var(--space-8);
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 2.25rem);
+      margin-bottom: var(--space-8);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.9) 0, rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,0.85) 0, rgba(255,255,255,0) 55%),
+        linear-gradient(135deg, #e5f4ff 0%, #e1f3ec 40%, #dfe9ff 100%);
+    }
+
+    /* Τεχνολογίες: κείμενο αριστερά + εικόνα δεξιά */
+    .technologies-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: var(--space-8);
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 2.25rem);
+      margin-bottom: var(--space-8);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.9) 0, rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,0.8) 0, rgba(255,255,255,0) 55%),
+        linear-gradient(135deg, #e3f2ff 0%, #eaf8f1 40%, #e0e9ff 100%);
+    }
+
+    /* Σενάρια: κείμενο αριστερά + εικόνα δεξιά */
+    .scenarios-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: var(--space-8);
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 2.25rem);
+      margin-bottom: var(--space-8);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.9) 0, rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,0.8) 0, rgba(255,255,255,0) 55%),
+        linear-gradient(135deg, #e8f7ff 0%, #e9f7ef 40%, #f3ecff 100%);
+    }
+
+    /* Κοινά στυλ για εικόνες summary/architecture/technologies/scenarios */
+    .summary-visual img,
+    .architecture-visual img,
+    .technologies-visual img,
+    .scenarios-visual img {
+      filter: drop-shadow(0 16px 30px rgba(0,0,0,0.18));
+    }
+
+    /* Responsive για summary / architecture / technologies / scenarios */
+    @media (max-width: 900px) {
+      .summary-layout,
+      .architecture-layout,
+      .technologies-layout,
+      .scenarios-layout {
+        grid-template-columns: minmax(0, 1fr);
+        text-align: left;
+      }
+      .summary-visual,
+      .architecture-visual,
+      .technologies-visual,
+      .scenarios-visual {
+        order: -1;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Hello World! 👋</h1>
+  <header>
+    <div class="container header-inner">
+      <div class="logo">
+        <div class="logo-mark" aria-hidden="true">
+          <!-- Απλό inline SVG με "σπίτι" & κύμα Wi-Fi -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 11.5 12 4l8 7.5"></path>
+            <path d="M7.5 11.5V20h9v-8.5"></path>
+            <path d="M9.5 16.2a3 3 0 0 1 5 0"></path>
+            <path d="M11 18.5h2"></path>
+          </svg>
+        </div>
+        <span>Smart Home Thesis</span>
+      </div>
+
+      <nav aria-label="Κύρια πλοήγηση">
+        <a href="#home">Αρχική</a>
+        <a href="#about">Περί έργου</a>
+        <a href="#architecture">Αρχιτεκτονική</a>
+        <a href="#technologies">Τεχνολογίες</a>
+        <a href="#scenarios">Σενάρια χρήσης</a>
+        <a href="#results">Αποτελέσματα</a>
+        <a href="#contact">Επικοινωνία</a>
+      </nav>
+
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Αλλαγή θέματος">
+        <span>Θέμα</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section id="home" class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-eyebrow">Διπλωματική εργασία</div>
+          <h1 class="hero-title">Σχεδίαση και υλοποίηση ενός ολοκληρωμένου οικιακού αυτοματισμού απομακρυσμένης εποπτείας με έμφαση σε ευφυείς και ΙοΤ τεχνολογίες.</h1>
+          <p class="hero-subtitle">
+            Μελέτη, σχεδίαση και υλοποίηση ενός συστήματος έξυπνου σπιτιού που συνδυάζει αισθητήρες, ενεργοποιητές
+            και πλατφόρμα κεντρικής διαχείρισης για άνεση, ασφάλεια και εξοικονόμηση ενέργειας.
+          </p>
+
+          <div class="hero-meta">
+            <span class="pill">Τμήμα: ΠΑΝΕΠΙΣΤΗΜΙΟ ΠΕΛΟΠΟΝΝΗΣΟΥ ΠΟΛΥΤΕΧΝΙΚΗ ΣΧΟΛΗ ΗΜΜΥ</span>
+            <span class="pill">Επιβλέπων: Χαδέλλης Λουκάς &amp; Τοπάλης Ευάγγελος</span>
+            <span class="pill">Φοιτητής: Τριανταφύλλης Χαράλαμπος</span>
+          </div>
+
+          <div class="hero-actions">
+            <a href="#architecture" class="btn-primary">
+              <span>↓</span>
+              Δες την αρχιτεκτονική
+            </a>
+            <a href="#about" class="btn-secondary">
+              Περίληψη έργου
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="Σύνοψη βασικών αξόνων">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            Βασικοί άξονες συστήματος
+          </div>
+          <h2 class="hero-card-title">Τι κάνει “έξυπνο” ένα σπίτι;</h2>
+          <div class="hero-card-grid">
+            <div>
+              <h3 style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.35rem;">Αυτοματισμός</h3>
+              <p class="muted">
+                Κανόνες &amp; σενάρια που εκτελούνται αυτόματα με βάση χρόνο, συνθήκες ή παρουσία.
+              </p>
+            </div>
+            <div>
+              <h3 style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.35rem;">Τηλεχειρισμός</h3>
+              <p class="muted">
+                Πρόσβαση από κινητό / web για απομακρυσμένο έλεγχο &amp; παρακολούθηση.
+              </p>
+            </div>
+            <div>
+              <h3 style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.35rem;">Ευφυΐα</h3>
+              <p class="muted">
+                Ανάλυση δεδομένων και προσαρμογή συμπεριφοράς (π.χ. μάθηση προτιμήσεων).
+              </p>
+            </div>
+            <div>
+              <h3 style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.35rem;">Ενσωμάτωση</h3>
+              <p class="muted">
+                Ομογενοποίηση ετερογενών συσκευών σε μια ενιαία πλατφόρμα.
+              </p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Περίληψη / Πλαίσιο & στόχοι -->
+    <section id="about">
+      <div class="container">
+
+        <div class="summary-layout">
+          <div class="section-heading">
+            <div class="section-kicker">Πλαίσιο &amp; στόχοι</div>
+            <h2 class="section-title">Περίληψη της διπλωματικής εργασίας</h2>
+            <p class="section-intro">
+              Η παρούσα διπλωματική εργασία επικεντρώνεται στη σχεδίαση και ανάπτυξη ενός ολοκληρωμένου
+              συστήματος οικιακού αυτοματισμού και απομακρυσμένης εποπτείας, βασισμένου στις πλατφόρμες
+              Arduino, ESP32 και Raspberry Pi. Το σύστημα αξιοποιεί ασύρματα πρωτόκολλα όπως Wi‑Fi (IEEE 802.11)
+              και LoRaWAN, το πρωτόκολλο ανταλλαγής μηνυμάτων MQTT με μορφή δεδομένων JSON, καθώς και
+              το Home Assistant σε συνδυασμό με τον broker Mosquitto, τη βάση χρονοσειρών InfluxDB και το
+              εργαλείο οπτικοποίησης Grafana, για την υλοποίηση ευφυών σεναρίων αυτοματισμού και την
+              ανάλυση ιστορικών δεδομένων.
+            </p>
+          </div>
+
+          <div class="summary-visual" aria-hidden="true">
+            <img src="newgreenhome.JPEG"
+                 alt="Εικονογράφηση έξυπνου σπιτιού με cloud και αισθητήρες">
+          </div>
+        </div>
+
+        <div class="two-column">
+          <div>
+            <h3>Ερευνητικά ερωτήματα</h3>
+            <p>Το έργο επικεντρώνεται στην απάντηση των παρακάτω ερωτημάτων:</p>
+            <ul>
+              <li>Πώς μπορεί να σχεδιαστεί μια modular αρχιτεκτονική έξυπνου σπιτιού, βασισμένη σε Arduino, ESP32 και Raspberry Pi, που να είναι επεκτάσιμη και ασφαλής;</li>
+              <li>Πώς συνδυάζονται τα ασύρματα πρωτόκολλα Wi‑Fi και LoRaWAN με MQTT για αξιόπιστη ανταλλαγή δεδομένων αισθητήρων και ενεργοποιητών;</li>
+              <li>Σε ποιο βαθμό η εφαρμογή ευφυών σεναρίων αυτοματισμού βελτιώνει την ενεργειακή αποδοτικότητα και την άνεση του χρήστη;</li>
+              <li>Πώς μπορούν εργαλεία όπως Home Assistant, InfluxDB και Grafana να προσφέρουν χρηστική εποπτεία και ανάλυση των δεδομένων σε πραγματικό χρόνο;</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Στόχοι συστήματος</h3>
+            <p>Η υλοποίηση επιδιώκει:</p>
+            <ul>
+              <li>Υλοποίηση ολοκληρωμένου smart home με εσωτερικά και εξωτερικά σενάρια (κατοικία και κήπος), βασισμένου σε Arduino, ESP32 και Raspberry Pi.</li>
+              <li>Ενσωμάτωση αισθητήρων και ενεργοποιητών μέσω Wi‑Fi και LoRaWAN, με κεντρική δρομολόγηση μέσω MQTT broker (Mosquitto).</li>
+              <li>Ανάπτυξη αυτοματισμών στο Home Assistant για φωτισμό, κλίμα, ασφάλεια και διαχείριση νερού.</li>
+              <li>Καταγραφή μετρήσεων σε InfluxDB και οπτικοποίηση σε Grafana και dashboards του Home Assistant, για ανάλυση ιστορικών δεδομένων και αξιολόγηση της υλοποίησης.</li>
+            </ul>
+
+            <div class="note-box">
+              <strong>Σημείωση:</strong> στην πλήρη εργασία τα παραπάνω τεκμηριώνονται με
+              διαγράμματα αρχιτεκτονικής, φωτογραφίες μακέτας και αποσπάσματα κώδικα.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Αρχιτεκτονική -->
+    <section id="architecture">
+      <div class="container">
+
+        <!-- Άνω block: κείμενο αρχιτεκτονικής + εικόνα δεξιά -->
+        <div class="architecture-layout">
+          <div class="section-heading">
+            <div class="section-kicker">Σχεδιασμός συστήματος</div>
+            <h2 class="section-title">Αρχιτεκτονική Smart Home</h2>
+            <p class="section-intro">
+              Η αρχιτεκτονική του συστήματος ακολουθεί μια πολυεπίπεδη προσέγγιση: επίπεδο συσκευών
+              με Arduino/ESP32 και πληθώρα αισθητήρων, ενδιάμεσο επίπεδο επικοινωνίας (Wi‑Fi, LoRaWAN,
+              σειριακά πρωτόκολλα SPI/I2C/UART) και επίπεδο υπηρεσιών όπου υλοποιούνται ο αυτοματισμός,
+              η αποθήκευση και η οπτικοποίηση μέσω Home Assistant, Mosquitto MQTT, InfluxDB και Grafana.
+            </p>
+          </div>
+
+          <div class="architecture-visual" aria-hidden="true">
+            <img src="architecture.PNG"
+                 alt="Διάγραμμα αρχιτεκτονικής συστήματος Smart Home με επίπεδα συσκευών, επικοινωνίας και υπηρεσιών">
+          </div>
+        </div>
+
+        <!-- Από κάτω συνεχίζουν κανονικά οι δύο στήλες -->
+        <div class="two-column">
+          <div>
+            <h3>Επίπεδο συσκευών &amp; πλατφορμών</h3>
+            <p>
+              Στο κατώτερο επίπεδο βρίσκεται η φυσική υποδομή της κατοικίας, όπως αναλύεται στα
+              κεφάλαια 4 και 5 της διπλωματικής. Χρησιμοποιούνται πολλαπλές πλατφόρμες ανάπτυξης
+              (Arduino Mega 2560, Arduino UNO R4 WiFi, Arduino MKR Zero, ESP32 S3/C3, ESP8266 NodeMCU
+              και Raspberry Pi 4 Model B), σε συνδυασμό με εξειδικευμένα modules όπως ESP32‑CAM,
+              LoRa Ra‑02 και τον αισθητήρα μηχανικής όρασης HUSKYLENS.
+            </p>
+            <ul>
+              <li>Διασύνδεση με πλούσιο σύνολο αισθητήρων (θερμοκρασίας/υγρασίας, στάθμης νερού,
+                  κίνησης PIR, φωτός, βροχής, υγρασίας εδάφους, ποιότητας αέρα, φλόγας κ.ά.).</li>
+              <li>Χρήση ενεργοποιητών όπως ρελέ, σερβοκινητήρες, βηματικούς κινητήρες και βομβητές
+                  για τον έλεγχο φορτίων, πορτών, παραθύρων, γκαραζόπορτας και αντλιών.</li>
+              <li>Ενσύρματη/σειριακή επικοινωνία σε επίπεδο υλικού μέσω SPI, I2C και UART μεταξύ
+                  πλακετών και περιφερειακών.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Επικοινωνία &amp; επίπεδο υπηρεσιών</h3>
+            <p>
+              Στο επόμενο επίπεδο, τα δεδομένα από όλους τους κόμβους συγκεντρώνονται σε μια ενιαία
+              υποδομή επικοινωνίας. Η ασύρματη διασύνδεση βασίζεται σε Wi‑Fi για τις περισσότερες
+              ενότητες του σπιτιού και σε LoRaWAN για σενάρια που απαιτούν μεγαλύτερη εμβέλεια
+              (π.χ. απομακρυσμένοι αισθητήρες κήπου), ενώ η ανταλλαγή μηνυμάτων γίνεται μέσω MQTT.
+            </p>
+            <ul>
+              <li>Χρήση broker Mosquitto για τη δρομολόγηση μηνυμάτων MQTT μεταξύ IoT κόμβων και
+                  του Home Assistant.</li>
+              <li>Μοντέλο publish/subscribe και οργάνωση θεμάτων (topics) σύμφωνα με τη δομή
+                  των σεναρίων και των χώρων της κατοικίας.</li>
+              <li>Αποθήκευση χρονοσειρών μετρήσεων στην InfluxDB και οπτικοποίηση σε dashboards
+                  Home Assistant και Grafana, όπως αναλύεται αναλυτικά στο κεφάλαιο 7.</li>
+            </ul>
+
+            <div class="tag-row">
+              <span class="tag">Device Layer – Πλατφόρμες &amp; Αισθητήρες</span>
+              <span class="tag">Communication Layer – Wi‑Fi / LoRaWAN / MQTT</span>
+              <span class="tag">Services Layer – Home Assistant / InfluxDB / Grafana</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Τεχνολογίες -->
+    <section id="technologies">
+      <div class="container">
+
+        <!-- Πάνω block: περιγραφή + εικόνα τεχνολογιών -->
+        <div class="technologies-layout">
+          <div class="section-heading">
+            <div class="section-kicker">Τεχνολογική στοίβα</div>
+            <h2 class="section-title">Χρησιμοποιούμενες τεχνολογίες &amp; πρότυπα</h2>
+            <p class="section-intro">
+              Η υλοποίηση βασίζεται σε σύγχρονες τεχνολογίες Διαδικτύου και εργαλεία ανάπτυξης που
+              παρουσιάζονται αναλυτικά στα κεφάλαια 2 και 3. Συνδυάζονται πρωτόκολλα JSON/HTTP, ασύρματα
+              πρότυπα Wi‑Fi και LoRaWAN, το πρωτόκολλο MQTT, καθώς και λογισμικό όπως Home Assistant OS,
+              Mosquitto, InfluxDB, Grafana, Arduino IDE, Fritzing και Sweet Home 3D.
+            </p>
+          </div>
+
+          <div class="technologies-visual" aria-hidden="true">
+            <img src="technologis.png"
+                 alt="Γραφική απεικόνιση των τεχνολογιών που χρησιμοποιούνται στο σύστημα Smart Home">
+          </div>
+        </div>
+
+        <!-- Κάτω μέρος: δύο ενότητες κειμένου -->
+        <div class="two-column">
+          <div class="card">
+            <h3>Τεχνολογίες Διαδικτύου &amp; επικοινωνίας</h3>
+            <ul>
+              <li>JSON και YAML ως μορφές αναπαράστασης και παραμετροποίησης δεδομένων
+                  (configuration files, ανταλλαγή μηνυμάτων).</li>
+              <li>HTTP/REST για πρόσβαση σε web υπηρεσίες και APIs του οικοσυστήματος smart home.</li>
+              <li>Wi‑Fi (IEEE 802.11) για τη σύνδεση των περισσότερων IoT κόμβων με το τοπικό δίκτυο.</li>
+              <li>LoRaWAN για ασύρματη επικοινωνία χαμηλής κατανάλωσης και μεγάλης εμβέλειας
+                  με απομακρυσμένους αισθητήρες.</li>
+              <li>MQTT ως ελαφρύ πρωτόκολλο μηνυμάτων publish/subscribe για τη διασύνδεση
+                  συσκευών, broker και Home Assistant.</li>
+              <li>Σειριακά πρωτόκολλα SPI, I2C και UART για την επικοινωνία μεταξύ πλακετών
+                  και modules σε επίπεδο υλικού.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Λογισμικό &amp; εργαλεία ανάπτυξης</h3>
+            <ul>
+              <li>Home Assistant OS ως κεντρική πλατφόρμα αυτοματισμού, εποπτείας
+                  και υλοποίησης dashboards.</li>
+              <li>Mosquitto MQTT broker για τη διαχείριση των topics και τη δρομολόγηση
+                  μηνυμάτων μεταξύ όλων των κόμβων.</li>
+              <li>InfluxDB για αποθήκευση χρονοσειρών μετρήσεων (θερμοκρασίες, υγρασία,
+                  κατανάλωση ενέργειας κ.λπ.).</li>
+              <li>Grafana για προχωρημένη οπτικοποίηση και ανάλυση των δεδομένων της
+                  InfluxDB μέσω δυναμικών γραφημάτων.</li>
+              <li>Arduino IDE για ανάπτυξη, μεταγλώττιση και φόρτωση κώδικα στις πλατφόρμες
+                  Arduino και ESP.</li>
+              <li>Fritzing για σχεδίαση διαγραμμάτων συνδεσμολογίας και κατασκευή της
+                  μακέτας υλοποίησης.</li>
+              <li>Sweet Home 3D για τρισδιάστατη αποτύπωση της κάτοψης της κατοικίας
+                  και οπτικοποίηση της θέσης των σεναρίων.</li>
+            </ul>
+            <div class="note-box">
+              Στην πλήρη εργασία, τα παραπάνω εργαλεία τεκμηριώνονται αναλυτικά με screenshots,
+              αποσπάσματα κώδικα και παραδείγματα ροής δεδομένων, σύμφωνα με τα κεφάλαια 3 και 7.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Σενάρια χρήσης -->
+    <section id="scenarios">
+      <div class="container">
+
+        <!-- Πάνω block: περιγραφή + εικόνα σεναρίων -->
+        <div class="scenarios-layout">
+          <div class="section-heading">
+            <div class="section-kicker">Εφαρμογές στην πράξη</div>
+            <h2 class="section-title">Ενδεικτικά σενάρια Smart Home</h2>
+            <p class="section-intro">
+              Τα σενάρια αυτοματοποίησης που υλοποιούνται στο κεφάλαιο 6 καλύπτουν τόσο
+              τους εσωτερικούς χώρους της κατοικίας όσο και τον κήπο, προσφέροντας
+              άνεση, ασφάλεια, εξοικονόμηση ενέργειας και πλούσια πληροφόρηση στον χρήστη.
+            </p>
+          </div>
+
+          <div class="scenarios-visual" aria-hidden="true">
+            <img src="home_automations.png"
+                 alt="Εικονογράφηση σεναρίων αυτοματοποίησης σε έξυπνο σπίτι">
+          </div>
+        </div>
+
+        <!-- Κάτω μέρος: δύο ενότητες κειμένου με σενάρια -->
+        <div class="two-column">
+          <div>
+            <h3>Σενάρια αυτοματοποίησης κατοικίας</h3>
+            <ul>
+              <li><strong>Έλεγχος φωτισμού (Κεφ. 6.2.1)</strong> – αυτόματο άναμμα/σβήσιμο φωτισμού
+                  ανάλογα με την παρουσία, το φυσικό φως και την ώρα της ημέρας.</li>
+              <li><strong>Κλιματισμός, θερμοκρασία και υγρασία (Κεφ. 6.2.2)</strong> –
+                  έλεγχος κλιματιστικών και θερμαντικών σωμάτων βάσει μετρήσεων DHT11/BME688
+                  και επιθυμητών setpoints.</li>
+              <li><strong>Ποιότητα αέρα &amp; πυρκαγιά (Κεφ. 6.2.3)</strong> – χρήση αισθητήρων αερίων
+                  (MQ2), ποιότητας αέρα και φλόγας για ανίχνευση επικίνδυνων καταστάσεων
+                  και ενεργοποίηση συναγερμού.</li>
+              <li><strong>Πόρτα εισόδου, παράθυρο, γκαραζόπορτα (Κεφ. 6.2.4–6.2.6)</strong> –
+                  έλεγχος πρόσβασης με RFID, πληκτρολόγιο και σερβοκινητήρες, καθώς και
+                  απομακρυσμένο άνοιγμα/κλείσιμο μέσω Home Assistant.</li>
+              <li><strong>Αντλία ανελκυστήρα &amp; σύστημα συναγερμού (Κεφ. 6.2.7–6.2.8)</strong> –
+                  αυτόματη ενεργοποίηση αντλίας σε περίπτωση πλημμύρας και ολοκληρωμένο
+                  σενάριο συναγερμού με βομβητή, ειδοποιήσεις και ενδείξεις κατάστασης.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Σενάρια κήπου &amp; μετρήσεων</h3>
+            <ul>
+              <li><strong>Εξωτερικός φωτισμός (Κεφ. 6.3.1)</strong> – αυτόματος έλεγχος φωτισμού
+                  αυλής/κήπου βάσει LDR, ώρας και παρουσίας.</li>
+              <li><strong>Αυτόματο πότισμα &amp; στάθμη δεξαμενής (Κεφ. 6.3.2)</strong> –
+                  συνδυασμός αισθητήρα υγρασίας εδάφους και αισθητήρα στάθμης νερού για
+                  ενεργοποίηση ηλεκτροβαλβίδων ποτίσματος.</li>
+              <li><strong>Καγκελόπορτα &amp; παρακολούθηση βροχής (Κεφ. 6.3.3–6.3.4)</strong> –
+                  απομακρυσμένος έλεγχος καγκελόπορτας και σενάριο αυτόματου μαζέματος
+                  ρούχων με βάση τον αισθητήρα βροχής.</li>
+              <li><strong>Περιβαλλοντικές συνθήκες &amp; συνολική κατανάλωση (Κεφ. 6.3.5–6.4)</strong> –
+                  καταγραφή θερμοκρασίας, υγρασίας και μεταβλητών ποιότητας αέρα, καθώς
+                  και μέτρηση συνολικής κατανάλωσης ηλεκτρικής ενέργειας μέσω κατάλληλων
+                  αισθητήρων ρεύματος.</li>
+            </ul>
+
+            <div class="note-box">
+              Κάθε ένα από τα παραπάνω σενάρια χαρτογραφείται σε συγκεκριμένα topics MQTT,
+              οντότητες του Home Assistant και γραφήματα InfluxDB/Grafana, προσφέροντας
+              πλήρη ιχνηλασιμότητα από τον αισθητήρα έως το τελικό dashboard.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Αποτελέσματα -->
+    <section id="results">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-kicker">Αξιολόγηση</div>
+          <h2 class="section-title">Αποτελέσματα &amp; συμπεράσματα</h2>
+          <p class="section-intro">
+            Στο πλαίσιο της αξιολόγησης (κεφάλαια 7 και 8), εξετάζονται η ορθότητα λειτουργίας των
+            σεναρίων, η αξιοπιστία της επικοινωνίας μέσω MQTT, η απόκριση του συστήματος, καθώς
+            και η επίδραση των αυτοματισμών στην κατανάλωση ενέργειας και στην εμπειρία του χρήστη.
+            Τα αποτελέσματα παρουσιάζονται μέσω dashboards του Home Assistant και του Grafana,
+            αξιοποιώντας τα δεδομένα που αποθηκεύονται στην InfluxDB.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="kpi">
+            <div class="kpi-label">Μείωση κατανάλωσης (ενδεικτικά)</div>
+            <div class="kpi-value">__%</div>
+            <p class="muted">
+              Διαφορά kWh πριν/μετά την εφαρμογή σεναρίων smart home.
+            </p>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Αριθμός αυτοματισμών</div>
+            <div class="kpi-value">__</div>
+            <p class="muted">
+              Πλήθος ενεργών σεναρίων (π.χ. φωτισμός, θέρμανση, ασφάλεια, λοιπά).
+            </p>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Ικανοποίηση χρήστη</div>
+            <div class="kpi-value">__/10</div>
+            <p class="muted">
+              Βαθμολογία από ερωτηματολόγιο ή προσωπική αξιολόγηση.
+            </p>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <strong>Εδώ μπορείς να αντικαταστήσεις τις τιμές</strong> με πραγματικά δεδομένα από μετρήσεις
+          (π.χ. καταγραφές κατανάλωσης, logs αισθητήρων, χρόνοι απόκρισης), καθώς και να ενσωματώσεις
+          screenshots από τα dashboards σου.
+        </div>
+      </div>
+    </section>
+
+    <!-- Επικοινωνία -->
+    <section id="contact">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-kicker">Στοιχεία</div>
+          <h2 class="section-title">Επικοινωνία &amp; πληροφορίες φοιτητή</h2>
+        </div>
+
+        <dl class="contact-section">
+          <dt>Ονοματεπώνυμο:</dt>
+          <dd>Τριανταφύλλης Χαράλαμπος</dd>
+
+          <dt>Αριθμός Μητρώου:</dt>
+          <dd>20213</dd>
+
+          <dt>Τμήμα / Σχολή:</dt>
+          <dd>ΠΑΝΕΠΙΣΤΗΜΙΟ ΠΕΛΟΠΟΝΝΗΣΟΥ, ΠΟΛΥΤΕΧΝΙΚΗ ΣΧΟΛΗ, ΤΜΗΜΑ ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ ΚΑΙ ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ</dd>
+
+          <dt>Επιβλέποντες Καθηγητές:</dt>
+          <dd>Χαδέλλης Λουκάς, Τοπάλης Ευάγγελος</dd>
+
+          <dt>Email επικοινωνίας:</dt>
+          <dd>
+            <a href="mailto:xrtrianta3@gmail.com">xrtrianta3@gmail.com</a>
+          </dd>
+
+          <dt>Σύνδεσμοι Social Media:</dt>
+          <dd>
+            LinkedIn:
+            <a href="https://www.linkedin.com/in/xaris-triantafyllhs-552a11385/" target="_blank" rel="noopener noreferrer">
+              linkedin.com/in/xaris-triantafyllhs-552a11385
+            </a>
+          </dd>
+          <dd>
+            Facebook:
+            <a href="https://www.facebook.com/xaris.triantafillhs/" target="_blank" rel="noopener noreferrer">
+              facebook.com/xaris.triantafillhs
+            </a>
+          </dd>
+          <dd>
+            Instagram:
+            <a href="https://www.instagram.com/xaris_triantafillhs/" target="_blank" rel="noopener noreferrer">
+              instagram.com/xaris_triantafillhs
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      Σελίδα διπλωματικής για το θέμα “Smart Home” – προσαρμογή περιεχομένου ανάλογα με την υλοποίησή σου.
+    </div>
+  </footer>
+
+  <script>
+    // Απλός dark/light theme toggle χωρίς αποθήκευση
+    (function () {
+      const html = document.documentElement;
+      const btn = document.querySelector("[data-theme-toggle]");
+
+      function setIcon(mode) {
+        if (!btn) return;
+        if (mode === "dark") {
+          btn.innerHTML =
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><span>Dark</span>';
+        } else {
+          btn.innerHTML =
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m17.66-7.66-1.41 1.41M7.76 16.24l-1.41 1.41m0-12.72 1.41 1.41m10.49 10.49-1.41-1.41"/></svg><span>Light</span>';
+        }
+      }
+
+      let mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      html.setAttribute("data-theme", mode);
+      setIcon(mode);
+
+      if (btn) {
+        btn.addEventListener("click", () => {
+          mode = mode === "dark" ? "light" : "dark";
+          html.setAttribute("data-theme", mode);
+          setIcon(mode);
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
